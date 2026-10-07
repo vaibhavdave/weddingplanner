@@ -58,9 +58,9 @@ T(s,'₹25,00,000',{x:.6,y:1.4,w:5.6,h:1.4,fontSize:70,bold:true,color:'E9C978',
 T(s,'average spend on one big-fat Indian wedding — committed months before anyone sees the décor, the layout or the final bill.',{x:.6,y:3.0,w:5.2,h:1.2,fontSize:18,color:'FFFFFF',valign:'top'});
 const hk=[['01','Photos & Pinterest','Inspiration, not your venue'],['02','Verbal quotes','Hard to compare, easy to inflate'],['03','Day-of surprises','"This isn\'t what we imagined"']];
 for(let i=0;i<3;i++){const y=1.45+i*1.2;glass(s,6.3,y,3.1,1.05,'pain-'+i);
-  T(s,hk[i][0],{x:6.5,y:y+.12,w:.6,h:.3,fontSize:11,bold:true,color:'E9C978',charSpacing:3});
+  T(s,hk[i][0],{x:6.5,y:y+.12,w:.6,h:.3,fontSize:12,bold:true,color:'E9C978',charSpacing:3});
   T(s,hk[i][1],{x:6.5,y:y+.38,w:2.8,h:.35,fontSize:17,bold:true,color:'FFFFFF',fontFace:'Cambria'});
-  T(s,hk[i][2],{x:6.5,y:y+.7,w:2.8,h:.3,fontSize:12.5,color:'D9D0F2'});}
+  T(s,hk[i][2],{x:6.5,y:y+.7,w:2.8,h:.3,fontSize:14,color:'FFFFFF'});}
 s.addNotes('Make it personal: "Imagine buying a car you can only see after you have paid." Let the number land.');
 
 // 3 PROBLEM
@@ -95,9 +95,13 @@ s.addNotes('Walk the three steps in one breath. Then go to the live demo.');
 pres.addSection({title:'Product'});
 s=pres.addSlide({masterName:'DARK',sectionTitle:'Product'});
 H(s,'Live product — not a mock-up',true);
-s.addShape(pres.ShapeType.roundRect,{x:.72,y:1.2,w:8.56,h:3.7,rectRadius:.2,fill:{color:'0F0820'},line:{color:'E9C978',width:1.25},shadow:{type:'outer',color:'000000',opacity:.45,blur:18,offset:4,angle:90},objectName:'device'});
-s.addImage({path:'img/rr-app.png',x:.82,y:1.3,w:8.36,h:8.36*1240/2896,objectName:'app-screenshot',altText:'WedVerse AI studio screen'});
-T(s,'Real-time 3D  ·  4 themes, 3 layouts  ·  capacity check  ·  VR walkthrough  ·  auto-quote  ·  couple + planner modes',{x:.6,y:5.0,w:8.5,h:.3,fontSize:12,color:'E9C978',bold:true,align:'left'});
+s.addImage({path:'img/rr-app-stage.png',x:.6,y:1.3,w:5.1,h:5.1*1000/1577,objectName:'app-stage',altText:'3D venue preview in the WedVerse studio'});
+frame(s,.6,1.3,5.1,5.1*1000/1577,'app-stage-frame');
+s.addImage({path:'img/rr-app-budget.png',x:6.1,y:1.3,w:3.2,h:3.2*720/669,objectName:'app-budget',altText:'Budget optimizer panel'});
+frame(s,6.1,1.3,3.2,3.2*720/669,'app-budget-frame');
+const cap=[['Live 3D preview','drag, zoom, walk the aisle'],['Live budget','updates with every change']];
+T(s,'← '+cap[0][0]+' · '+cap[0][1],{x:.6,y:4.7,w:5.1,h:.35,fontSize:14,bold:true,color:'E9C978'});
+T(s,cap[1][0]+' — '+cap[1][1],{x:5.95,y:4.9,w:3.45,h:.3,fontSize:13,bold:true,color:'E9C978'});
 s.addNotes('DEMO (45 sec): open index.html. Switch theme live, drag guests to 700 to trigger the capacity warning, open Quote. Say: "Every number you see updates from what is in the 3D scene."');
 
 // 6 LOOKS
@@ -106,8 +110,8 @@ H(s,'Same venue. Four looks. Zero rework',true);
 const lk=[['pastel','Royal Pastel'],['emerald','Emerald Heritage'],['crimson','Crimson Maharaja'],['midnight','Midnight Gala']];
 for(let i=0;i<4;i++){const x=.6+(i%2)*3.15,y=1.4+Math.floor(i/2)*2.0;
   s.addImage({path:`img/rr-${lk[i][0]}.png`,x,y,w:3.0,h:3.0*560/900*1,objectName:'look-'+i,altText:lk[i][1]+' theme'});
-  s.addShape(pres.ShapeType.roundRect,{x:x+.12,y:y+1.45,w:1.75,h:.3,rectRadius:.15,fill:{color:'1B1033',transparency:15},line:{color:'E9C978',width:.75},objectName:'chip-bg-'+i});
-  T(s,lk[i][1],{x:x+.12,y:y+1.45,w:1.75,h:.3,fontSize:11,bold:true,color:'FFFFFF',align:'center',valign:'middle'});}
+  s.addShape(pres.ShapeType.roundRect,{x:x+.12,y:y+1.45,w:1.95,h:.32,rectRadius:.16,fill:{color:'1B1033',transparency:15},line:{color:'E9C978',width:.75},objectName:'chip-bg-'+i});
+  T(s,lk[i][1],{x:x+.12,y:y+1.45,w:1.95,h:.32,fontSize:12,bold:true,color:'FFFFFF',align:'center',valign:'middle'});}
 const lt=[['4','themes'],['3','layouts'],['<1s','to switch']];
 for(let i=0;i<3;i++){T(s,lt[i][0],{x:7.2,y:1.4+i*1.15,w:2.2,h:.65,fontSize:38,bold:true,color:'E9C978',fontFace:'Cambria'});
   T(s,lt[i][1],{x:7.2,y:2.02+i*1.15,w:2.2,h:.3,fontSize:14,color:'FFFFFF'});}
@@ -134,7 +138,7 @@ const bm=[['FaUsers','Planner SaaS','₹2,999–₹9,999 / month','Unlimited cli
 for(let i=0;i<3;i++){const y=1.35+i*1.2;card(s,.6,y,8.8,1.05,'model-'+i);
   await circ(s,bm[i][0],.85,y+.17,.7,bm[i][4],'FFFFFF','model-'+i);
   T(s,bm[i][1],{x:1.8,y:y+.14,w:2.8,h:.4,fontSize:19,bold:true,color:'1B1033',fontFace:'Cambria'});
-  T(s,bm[i][2],{x:1.8,y:y+.58,w:3.1,h:.35,fontSize:13,bold:true,color:bm[i][4]});
+  T(s,bm[i][2],{x:1.8,y:y+.58,w:3.1,h:.35,fontSize:14,bold:true,color:bm[i][4]});
   T(s,bm[i][3],{x:5.1,y:y+.1,w:4.1,h:.85,fontSize:14,color:'4A3F73',valign:'middle'});}
 s.addNotes('Prices are proposed placeholders — replace with your validated pricing. Lead with SaaS (predictable), vendors (scale), commission (upside).');
 
@@ -146,7 +150,7 @@ const ck='✓',no='–';
 const hd=(o,gold)=>({text:o,options:{bold:true,color:gold?'1B1033':'FFFFFF',fill:{color:gold?'E9C978':'1B1033'},align:'center',fontSize:12}});
 const rows=[[{text:'',options:{fill:{color:'1B1033'}}},hd('Mood boards'),hd('Vendor marketplaces'),hd('Planner spreadsheets'),hd('WedVerse AI',true)]];
 const data=[['Sees YOUR venue in 3D',no,no,no,ck],['Instant theme & layout changes',no,no,no,ck],['Live cost as you design',no,no,ck,ck],['Compare vendors like-for-like',no,ck,no,ck],['Quote + material list from design',no,no,no,ck]];
-for(const r of data)rows.push(r.map((c,j)=>j===0?{text:c,options:{align:'left',fontSize:13,bold:true,color:'1B1033',fill:{color:'FFFFFF'}}}:{text:c,options:{align:'center',fontSize:16,bold:c===ck,color:j===4?'3AA68A':'8A7FB0',fill:{color:j===4?'E8F7F2':'FFFFFF'}}}));
+for(const r of data)rows.push(r.map((c,j)=>j===0?{text:c,options:{align:'left',fontSize:14,bold:true,color:'1B1033',fill:{color:'FFFFFF'}}}:{text:c,options:{align:'center',fontSize:16,bold:c===ck,color:j===4?'3AA68A':'8A7FB0',fill:{color:j===4?'E8F7F2':'FFFFFF'}}}));
 s.addTable(rows,{x:.6,y:1.4,w:8.8,colW:[3.2,1.3,1.5,1.5,1.3],rowH:.5,border:{type:'solid',pt:.5,color:'DDD6F3'},valign:'middle',fontFace:'Calibri',objectName:'competition-table'});
 T(s,'Moat: proprietary venue library + planner workflow data + vendor price intelligence.',{x:.6,y:4.6,w:8.8,h:.4,fontSize:15,italic:true,color:'4A3F73'});
 s.addNotes('Be ready: "Can we not just hire a designer for renders?" — Yes, for ₹30–50k per render, days later. We do unlimited, instant, and attach the quote.');
@@ -157,7 +161,7 @@ H(s,'Go-to-market: planners first',false);
 const gt=[['0–6 MONTHS','Pilot','Onboard 50 metro wedding planners free. Collect 200 real venues.','5B52E0'],['6–12 MONTHS','Monetise','Launch SaaS tiers + vendor lead marketplace in 3 cities.','B98A2E'],['12–24 MONTHS','Scale','Booking commissions, venue partnerships, NRI & destination weddings.','3AA68A']];
 s.addShape(pres.ShapeType.line,{x:1.1,y:2.0,w:7.9,h:0,line:{color:'C9BFEA',width:2,dashType:'dash'},objectName:'timeline'});
 for(let i=0;i<3;i++){const x=.6+i*3.0;
-  T(s,gt[i][0],{x,y:1.3,w:2.5,h:.3,fontSize:11,bold:true,color:gt[i][3],charSpacing:3});
+  T(s,gt[i][0],{x,y:1.3,w:2.5,h:.3,fontSize:12,bold:true,color:gt[i][3],charSpacing:3});
   s.addShape(pres.ShapeType.ellipse,{x:x+.05,y:1.75,w:.5,h:.5,fill:{color:gt[i][3]},line:{color:'FFFFFF',width:3},objectName:'node-'+i});
   card(s,x,2.6,2.8,2.15,'gtm-'+i);
   T(s,gt[i][1],{x:x+.25,y:2.78,w:2.3,h:.4,fontSize:21,bold:true,color:'1B1033',fontFace:'Cambria'});
@@ -172,7 +176,7 @@ s.addChart(pres.charts.BAR,[{name:'Revenue (₹ Cr)',labels:['Year 1','Year 2','
 const kp=[['75%','target gross margin'],['<4 mo','CAC payback target'],['3×','LTV : CAC target']];
 for(let i=0;i<3;i++){const y=1.3+i*1.25;card(s,6.35,y,3.05,1.1,'kpi-'+i);
   T(s,kp[i][0],{x:6.55,y:y+.1,w:1.4,h:.9,fontSize:28,bold:true,color:'5B52E0',fontFace:'Cambria',valign:'middle'});
-  T(s,kp[i][1],{x:8.0,y:y+.1,w:1.3,h:.9,fontSize:13,color:'1B1033',valign:'middle'});}
+  T(s,kp[i][1],{x:8.0,y:y+.1,w:1.3,h:.9,fontSize:14,color:'1B1033',valign:'middle'});}
 s.addNotes('All figures are illustrative targets, not actuals. Replace with your model before pitching. Expect: "What are your sales today?" — answer honestly (pre-revenue prototype) and pivot to the pilot plan.');
 
 // 12 ASK
@@ -182,7 +186,7 @@ H(s,'The ask',true);
 T(s,'₹1.5 Cr',{x:.6,y:1.25,w:4.6,h:1.3,fontSize:76,bold:true,color:'E9C978',fontFace:'Cambria'});
 T(s,'for 5% equity',{x:.6,y:2.6,w:4.4,h:.5,fontSize:26,color:'FFFFFF',fontFace:'Cambria'});
 glass(s,.6,3.35,4.4,.55,'val-card');T(s,'₹30 Cr post-money  ·  18-month runway',{x:.6,y:3.35,w:4.4,h:.55,fontSize:14,bold:true,color:'E9C978',align:'center',valign:'middle'});
-T(s,'Beyond cash: wedding-industry distribution, vendor introductions and brand credibility.',{x:.6,y:4.15,w:4.4,h:.8,fontSize:14,italic:true,color:'D9D0F2',valign:'top'});
+T(s,'Beyond cash: wedding-industry distribution, vendor introductions and brand credibility.',{x:.6,y:4.15,w:4.4,h:.8,fontSize:15,italic:true,color:'FFFFFF',valign:'top'});
 s.addChart(pres.charts.DOUGHNUT,[{name:'Use of funds',labels:['Product & AI','Sales & partnerships','Vendor network','Ops & legal'],values:[40,30,15,15]}],{x:5.3,y:1.15,w:4.2,h:3.9,holeSize:58,chartColors:['E9C978','8B5CF6','E58AA3','3AA68A'],showPercent:true,showValue:false,dataLabelColor:'1B1033',dataLabelFontSize:12,dataLabelFontFace:'+mn-lt',showLegend:true,legendPos:'b',legendColor:'FFFFFF',legendFontSize:12,legendFontFace:'+mn-lt',showTitle:true,title:'Use of funds',titleColor:'FFFFFF',titleFontSize:14,dataBorder:{pt:2,color:'1B1033'}});
 s.addNotes('Say the ask clearly, once: "₹1.5 crore for 5 percent." Then stop talking. Valuation and split are placeholders — adjust to your numbers.');
 
