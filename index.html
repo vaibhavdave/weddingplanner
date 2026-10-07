@@ -573,7 +573,7 @@ function derive(layout=state.layout,guests=state.guests,ts=state.tableSize){
   let urnZ=[];for(let z=aisleStart+3;z<=aisleEnd-3;z+=3.4)urnZ.push(z);
   let candleZ=[];for(let z=aisleStart+1;z<=aisleEnd-1;z+=.75)candleZ.push(z);
   let stripZ=[];for(let z=stageZ+3;z<=V.D/2-2.5;z+=1.2)stripZ.push(z);
-  const pz=[];for(let i=0;i<V.pillars;i++)pz.push(-V.D/2+8+(V.D-12)*i/(V.pillars-1||1)-0);
+  const pz=[];for(let i=0;i<V.pillars;i++)pz.push(-V.D/2+8+(V.D-16)*i/(V.pillars-1||1));
   const rows=layout==='theatre'?new Set(used.map(u=>u.z)).size:0;
   const tables=layout==='theatre'?0:used.length;
   const chairs=layout==='cocktail'?0:seated;
@@ -979,7 +979,7 @@ function applyLighting(){
 
 /* ---- camera ---- */
 const PRESETS=()=>{const V=venue(),sz=-V.D/2+4.5;return{
-  entrance:{yaw:0,pitch:-.03,dist:V.D-14,tx:0,ty:3.4,tz:-V.D/2+9},
+  entrance:{yaw:0,pitch:-.02,dist:V.D-11.5,tx:0,ty:3.2,tz:-V.D/2+9},
   mandap:{yaw:.28,pitch:.05,dist:13,tx:0,ty:2.4,tz:sz},
   side:{yaw:-1.05,pitch:.1,dist:V.D*.55,tx:0,ty:2.8,tz:sz+10},
   aerial:{yaw:.55,pitch:.78,dist:V.D*.95,tx:0,ty:0,tz:2}}};
