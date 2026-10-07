@@ -121,9 +121,9 @@ s.addNotes('Click through the four themes live. This is the "wow": the couple ar
 pres.addSection({title:'Market & Model'});
 s=pres.addSlide({masterName:'LIGHT',sectionTitle:'Market & Model'});
 H(s,'A huge, emotional, under-digitised market',false);
-const mk=[['~10M','weddings a year in India','5B52E0'],['~$130B','estimated annual wedding spend','B98A2E'],['10–15%','of budget goes to décor — our wedge','3AA68A']];
+const mk=[['~10M','weddings a year in India','5B52E0'],['~₹10L Cr','estimated annual wedding spend (₹10 lakh crore)','B98A2E'],['10–15%','of budget goes to décor — our wedge','3AA68A']];
 for(let i=0;i<3;i++){const x=.6+i*3.0;card(s,x,1.4,2.8,2.4,'stat-'+i);
-  T(s,mk[i][0],{x:x+.25,y:1.65,w:2.4,h:.95,fontSize:46,bold:true,color:mk[i][2],fontFace:'Cambria'});
+  T(s,mk[i][0],{x:x+.25,y:1.65,w:2.5,h:.95,fontSize:36,bold:true,color:mk[i][2],fontFace:'Cambria'});
   T(s,mk[i][1],{x:x+.25,y:2.75,w:2.3,h:.8,fontSize:15,color:'1B1033',valign:'top'});}
 s.addShape(pres.ShapeType.roundRect,{x:.6,y:4.1,w:8.8,h:.85,rectRadius:.14,fill:{color:'1B1033'},line:{color:'1B1033'},objectName:'beachhead'});
 T(s,'Beachhead: metro planners & décor-led weddings (₹15L–₹1 Cr budgets). Then vendors, venues and NRI weddings.',{x:.85,y:4.1,w:8.3,h:.85,fontSize:15,color:'FFFFFF',valign:'middle'});

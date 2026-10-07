@@ -435,7 +435,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 0 40px}
 <section id="view-hub" class="view"><div id="hub"></div></section>
 
 </main>
-<footer>WedVerse AI · prototype · all estimates are indicative market rates in INR</footer>
+<footer>WedVerse AI · prototype · all estimates are indicative market rates in ₹ (Indian Rupees)</footer>
 
 <dialog id="dlg"><form method="dialog" id="dlgForm"></form></dialog>
 <div class="toast" id="toast"></div>
@@ -1322,7 +1322,7 @@ function loadClient(i){
 function syncClient(){const c=state.clients[state.activeClient];if(c&&state.role==='planner')Object.assign(c,{names:state.names,date:state.date,city:state.city,guests:state.guests,budget:state.budget,theme:state.theme,venue:state.venue==='custom'?c.venue:state.venue})}
 function csv(){
   const dv=VENDORS.decor.find(v=>v.id===state.vendor),q=quote({vf:dv.f});
-  const rows=[['Category','Item','Qty','Unit','Rate (INR)','Amount (INR)'],...q.lines.map(l=>[l.cat,l.item,+l.qty.toFixed(1),l.unit,Math.round(l.rate),Math.round(l.amt)]),['','Subtotal','','','',Math.round(q.sub)],['','Markup','','','',Math.round(q.markup)],['','GST','','','',Math.round(q.gst)],['','Total','','','',Math.round(q.total)]];
+  const rows=[['Category','Item','Qty','Unit','Rate (₹)','Amount (₹)'],...q.lines.map(l=>[l.cat,l.item,+l.qty.toFixed(1),l.unit,Math.round(l.rate),Math.round(l.amt)]),['','Subtotal','','','',Math.round(q.sub)],['','Markup','','','',Math.round(q.markup)],['','GST','','','',Math.round(q.gst)],['','Total','','','',Math.round(q.total)]];
   const t=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/csv'}));a.download='wedverse-quote.csv';a.click();toast('CSV downloaded');
 }
