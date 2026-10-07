@@ -678,15 +678,17 @@ function initGL(){
   try{G.r=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true,powerPreference:'high-performance'})}
   catch(e){return fallback('WebGL is not available in this browser. Showing the 2D floor plan instead.')}
   glOK=true;
-  const r=G.r;r.toneMapping=THREE.ACESFilmicToneMapping;r.setPixelRatio(Math.min(devicePixelRatio||1,2));
-  G.scene=new THREE.Scene();G.scene.background=new THREE.Color(0x120a1a);
-  G.fog=new THREE.FogExp2(0x1a0f22,.011);G.scene.fog=G.fog;
-  G.cam=new THREE.PerspectiveCamera(58,1,.1,300);
+  const r=G.r;r.outputEncoding=THREE.sRGBEncoding;r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;r.toneMapping=THREE.ACESFilmicToneMapping;r.setPixelRatio(Math.min(devicePixelRatio||1,2));
+  G.scene=new THREE.Scene();G.scene.background=lin(0x120a1a);
+  G.fog=new THREE.FogExp2(lin(0x1a0f22).getHex(),.009);G.scene.fog=G.fog;
+  G.cam=new THREE.PerspectiveCamera(52,1,.1,300);
   G.ortho=new THREE.OrthographicCamera(-10,10,10,-10,.1,200);
   G.world=new THREE.Group();G.ceil=new THREE.Group();G.scene.add(G.world,G.ceil);
   G.amb=new THREE.AmbientLight(0xffffff,.5);
   G.hemi=new THREE.HemisphereLight(0xfff2e0,0x7a6350,.7);
-  G.dir=new THREE.DirectionalLight(0xffffff,.4);G.dir.position.set(0,14,34);
+  G.dir=new THREE.DirectionalLight(0xfff0dc,1);G.dir.castShadow=true;G.dir.shadow.mapSize.set(4096,4096);G.dir.shadow.bias=-.0003;G.dir.shadow.normalBias=.04;G.dir.shadow.radius=3;G.scene.add(G.dir.target);
+  G.up=new THREE.DirectionalLight(0xffe6c4,.5);G.up.position.set(0,-30,6);G.scene.add(G.up,G.up.target);
+  try{G.scene.environment=makeEnv(r)}catch(e){}
   G.spot=new THREE.SpotLight(0xffe2b8,1.5,60,.6,.6,1);
   G.pls=[0,1,2,3].map(()=>new THREE.PointLight(0xffe2b8,1,40,1));
   G.scene.add(G.amb,G.hemi,G.dir,G.spot,G.spot.target,...G.pls);
@@ -708,9 +710,18 @@ function fallback(msg){
 
 /* ---- textures ---- */
 const TX={};
+const lin=c=>(c&&c.isColor?c.clone():new THREE.Color(c).convertSRGBToLinear());
+function makeEnv(r){
+  const sc=new THREE.Scene();
+  const t=canvasTex(8,256,(x,w,h)=>{const g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'#c9a577');g.addColorStop(.45,'#7d6450');g.addColorStop(.52,'#4a3a36');g.addColorStop(1,'#140e12');x.fillStyle=g;x.fillRect(0,0,w,h)},false);
+  sc.add(new THREE.Mesh(new THREE.SphereGeometry(50,32,16),new THREE.MeshBasicMaterial({map:t,side:THREE.BackSide})));
+  const panel=(x,y,z,w,h,i)=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({color:new THREE.Color(i,i*.92,i*.8),side:THREE.DoubleSide}));m.position.set(x,y,z);m.lookAt(0,0,0);sc.add(m)};
+  panel(0,40,0,30,30,5);panel(-35,15,10,12,25,4);panel(35,15,-10,12,25,4);panel(0,10,-45,30,10,3);panel(0,12,45,25,10,3);
+  const pm=new THREE.PMREMGenerator(r);const env=pm.fromScene(sc,.03).texture;pm.dispose();return env;
+}
 function canvasTex(w,h,fn,repeat=true){
   const c=document.createElement('canvas');c.width=w;c.height=h;fn(c.getContext('2d'),w,h);
-  const t=new THREE.CanvasTexture(c);if(repeat)t.wrapS=t.wrapT=THREE.RepeatWrapping;t.anisotropy=8;return t;
+  const t=new THREE.CanvasTexture(c);if(repeat)t.wrapS=t.wrapT=THREE.RepeatWrapping;t.anisotropy=8;t.encoding=THREE.sRGBEncoding;return t;
 }
 function marble(rx,ry){
   if(!TX.marble)TX.marble=canvasTex(512,512,(x,w,h)=>{
@@ -746,7 +757,7 @@ function clearGroup(g){
 }
 function glowPts(arr,size,color,op=1,kind='glow'){
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(arr,3));
-  const m=new THREE.PointsMaterial({map:glowTex(),size,color,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:op,sizeAttenuation:true});
+  const m=new THREE.PointsMaterial({map:glowTex(),size,color:lin(color),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,opacity:op,sizeAttenuation:true});
   const p=new THREE.Points(g,m);p.userData={base:op,kind};G.glows.push(p);return p;
 }
 function inst(geo,mat,n,fn){
@@ -773,10 +784,10 @@ function rebuild(){
   if(!glOK)return;
   clearGroup(G.world);clearGroup(G.ceil);G.glows=[];
   const V=venue(),T=THEMES[state.theme],dc=state.decor,P=derive(),rnd=rng(11);
-  const {W,D:Dp,H}=V,stageZ=P.stageZ,C=c=>new THREE.Color(c);
-  const M=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.7,metalness:0},o));
-  const gold=M(0xd9b24c,{roughness:.35,metalness:.45,emissive:0x4a3410,emissiveIntensity:.35});
-  const ivory=M(0xf8f1e6,{roughness:.55,emissive:0x2a2218,emissiveIntensity:.12});
+  const {W,D:Dp,H}=V,stageZ=P.stageZ,C=lin;
+  const M=(c,o={})=>{const p=Object.assign({color:lin(c),roughness:.7,metalness:0},o);if(o.emissive!==undefined)p.emissive=lin(o.emissive);return new THREE.MeshStandardMaterial(p)};
+  const gold=M(0xd9b24c,{roughness:.26,metalness:1,envMapIntensity:1.15});
+  const ivory=M(0xf8f1e6,{roughness:.5});
   const wallC=C(T.wall);
   const blooms=[];const bloom=(x,y,z,s,c)=>blooms.push([x,y,z,s,c]);
   const pick=()=>T.flowers[Math.floor(rnd()*T.flowers.length)];
@@ -784,7 +795,7 @@ function rebuild(){
   const PI=Math.PI;
 
   // floor
-  const floor=new THREE.Mesh(new THREE.PlaneGeometry(W,Dp),M(0xffffff,{map:marble(W/5,Dp/5),roughness:.2,metalness:.12}));
+  const floor=new THREE.Mesh(new THREE.PlaneGeometry(W,Dp),new THREE.MeshPhysicalMaterial({color:0xffffff,map:marble(W/5,Dp/5),roughness:.16,metalness:0,clearcoat:.9,clearcoatRoughness:.1}));
   floor.rotation.x=-PI/2;add(floor);
   // ceiling
   const ceil=new THREE.Mesh(new THREE.PlaneGeometry(W,Dp),M(0xcdb591,{emissive:0x6a5030,emissiveIntensity:.1,roughness:.9}));
@@ -812,19 +823,17 @@ function rebuild(){
   add(inst(new THREE.BoxGeometry(.9,H,.9),ivory,pil.length,(d,i)=>d.position.set(pil[i][0],H/2,pil[i][1])));
   add(inst(new THREE.BoxGeometry(1.25,.55,1.25),gold,pil.length,(d,i)=>d.position.set(pil[i][0],.28,pil[i][1])));
   addC(inst(new THREE.BoxGeometry(1.25,.45,1.25),gold,pil.length,(d,i)=>d.position.set(pil[i][0],H-.5,pil[i][1])));
-  if(dc.florals)for(const [x,z] of pil){
-    for(let k=0;k<16;k++){const a=rnd()*PI*2,rr=.5+rnd()*.35;bloom(x+Math.cos(a)*rr,H*.5+rnd()*H*.26,z+Math.sin(a)*rr,.26+rnd()*.16,pick())}
-    for(let k=0;k<7;k++){const a=rnd()*PI*2;bloom(x+Math.cos(a)*.55,.8+rnd()*1.1,z+Math.sin(a)*.55,.22+rnd()*.12,pick())}
-  }
+  if(dc.florals)for(const [x,z] of pil){for(let k=0;k<34;k++){const t=k/34,a=t*PI*7,y=.9+t*H*.74;bloom(x+Math.cos(a)*.62,y,z+Math.sin(a)*.62,.2+rnd()*.12,pick())}}
   if(dc.chandeliers||dc.candles){const arr=[];for(const [x,z] of pil)arr.push(x+(x<0?1.1:-1.1),.2,z);add(glowPts(arr,2.6,T.light,.5,'up'))}
 
   // ceiling swags
   if(dc.drapes){
     const xw=W/2-1.0, ridge=H-.5;
     const strip=ribbonGeo(u=>[u*xw,ridge-1.9*u-.6*Math.sin(PI*u),0],1.3,16,3);
-    const fab=new THREE.MeshStandardMaterial({color:0xffffff,side:THREE.DoubleSide,roughness:.7,transparent:true,opacity:.9,emissive:0x6a4a40,emissiveIntensity:.08});
+    const fab=new THREE.MeshStandardMaterial({color:0xffffff,side:THREE.DoubleSide,roughness:.62,transparent:true,opacity:.93,emissive:lin(0x6a4a40),emissiveIntensity:.05});
     const n=P.stripZ.length,cA=C(T.drape),cB=C(T.drape2);
-    const m=inst(strip,fab,n*2,(d,i,mm)=>{const k=i%n,s=i<n?1:-1;d.position.z=P.stripZ[k];d.scale.x=s;mm.setColorAt(i,k%2?cA:cB)});addC(m);
+    const stripR=ribbonGeo(u=>[-u*xw,ridge-1.9*u-.6*Math.sin(PI*u),0],1.3,16,3);
+    for(const g of[strip,stripR])addC(inst(g,fab,n,(d,k,mm)=>{d.position.z=P.stripZ[k];mm.setColorAt(k,k%2?cA:cB)}));
     // wall swags between pillars
     const gap=(pz[1]-pz[0]);
     const sw=ribbonGeo(u=>[u*gap,-.9*Math.sin(PI*u),0],.9,14,3);
@@ -836,7 +845,7 @@ function rebuild(){
     if(dc.drapes){
       const pg=new THREE.PlaneGeometry(1.4,H-.4,1,14);const pp=pg.attributes.position;
       for(let i=0;i<pp.count;i++)pp.setZ(i,.22*Math.sin(pp.getY(i)*1.4+pp.getX(i)*3));pg.computeVertexNormals();
-      const fab=new THREE.MeshStandardMaterial({color:0xffffff,side:THREE.DoubleSide,roughness:.8,emissive:0x6a4a40,emissiveIntensity:.08});
+      const fab=new THREE.MeshStandardMaterial({color:0xffffff,side:THREE.DoubleSide,roughness:.75,emissive:lin(0x6a4a40),emissiveIntensity:.05});
       const n=P.backdrop,cA=C(T.drape),cB=C(T.drape2);
       add(inst(pg,fab,n,(d,i,mm)=>{d.position.set(-W/2+W*(i+.5)/n,H/2-.2,-Dp/2+.35);d.scale.x=W/n/1.4*1.15;mm.setColorAt(i,i%2?cA:cB)}));
     }
@@ -889,7 +898,7 @@ function rebuild(){
   const glowArr=[];
   if(dc.candles){
     const cz=[];for(const z of P.candleZ)for(const s of[-1,1])cz.push([s*1.36,z]);
-    const cm=new THREE.MeshStandardMaterial({color:0xfff3d0,emissive:0xffe0a0,emissiveIntensity:1.2});
+    const cm=new THREE.MeshStandardMaterial({color:lin(0xfff3d0),emissive:lin(0xffe0a0),emissiveIntensity:1.4});
     add(inst(new THREE.CylinderGeometry(.05,.05,.28,8),cm,cz.length,(d,i)=>d.position.set(cz[i][0],.16,cz[i][1])));
     for(const c of cz)glowArr.push(c[0],.4,c[1]);
   }
@@ -916,7 +925,7 @@ function rebuild(){
       add(inst(new THREE.CylinderGeometry(.55,.55,.03,20),M(T.drape,{emissive:T.drape,emissiveIntensity:.07}),tabs.length,(d,i)=>d.position.set(tabs[i].x,.78,tabs[i].z)));
       add(inst(new THREE.CylinderGeometry(.05,.05,.6,8),gold,tabs.length,(d,i)=>d.position.set(tabs[i].x,1.08,tabs[i].z)));
       if(dc.florals)for(const q of tabs){for(let k=0;k<5;k++)bloom(q.x+(rnd()-.5)*.4,1.5+(rnd()-.3)*.25,q.z+(rnd()-.5)*.4,.17+rnd()*.1,pick());bloom(q.x,1.62,q.z,.2,pick())}
-      if(dc.candles){const cm=new THREE.MeshStandardMaterial({color:0xfff3d0,emissive:0xffe0a0,emissiveIntensity:1.2});const cp=[];
+      if(dc.candles){const cm=new THREE.MeshStandardMaterial({color:lin(0xfff3d0),emissive:lin(0xffe0a0),emissiveIntensity:1.4});const cp=[];
         for(const q of tabs)for(let k=0;k<3;k++){const a=k*2.09;cp.push([q.x+Math.cos(a)*.45,q.z+Math.sin(a)*.45]);glowArr.push(q.x+Math.cos(a)*.45,.95,q.z+Math.sin(a)*.45)}
         add(inst(new THREE.CylinderGeometry(.04,.04,.16,8),cm,cp.length,(d,i)=>d.position.set(cp[i][0],.88,cp[i][1])))}
     }else{ // cocktail
@@ -928,17 +937,22 @@ function rebuild(){
   if(state.layout==='theatre'&&dc.florals){const rz=[...new Set(P.slots.map(q=>q.z))];rz.forEach((z,i)=>{if(i%3===0)for(const s of[-1,1]){for(let k=0;k<4;k++)bloom(s*2.45+(rnd()-.5)*.2,.95+rnd()*.2,z+(rnd()-.5)*.2,.14+rnd()*.06,pick())}})}
   if(glowArr.length)add(glowPts(glowArr,.55,0xffd9a0,.8,'candle'));
 
-  // blooms (single instanced mesh)
+  // blooms: each bloom becomes a small cluster of petals + a leaf, in one instanced mesh
   if(blooms.length){
-    const bm=new THREE.InstancedMesh(new THREE.SphereGeometry(1,9,7),M(0xffffff,{roughness:.85,emissive:0x2a1a1a,emissiveIntensity:.12}),blooms.length),d=new THREE.Object3D(),col=new THREE.Color();
-    blooms.forEach((b,i)=>{d.position.set(b[0],b[1],b[2]);d.scale.set(b[3],b[3]*.85,b[3]);d.updateMatrix();bm.setMatrixAt(i,d.matrix);bm.setColorAt(i,col.setHex(b[4]))});
+    const parts=[],rr=rng(77);
+    for(const b of blooms){const sz=b[3],k=clamp(Math.round(sz*11),3,6);
+      for(let j=0;j<k;j++){const a=rr()*PI*2,e=(rr()-.3)*PI*.7,rad=sz*(.35+rr()*.6);
+        parts.push([b[0]+Math.cos(a)*Math.cos(e)*rad,b[1]+Math.sin(e)*rad*.8,b[2]+Math.sin(a)*Math.cos(e)*rad,sz*(.34+rr()*.22),b[4],0])}
+      if(rr()<.45)parts.push([b[0]+(rr()-.5)*sz,b[1]-sz*.5,b[2]+(rr()-.5)*sz,sz*.5,0x4f8a5b,1])}
+    const bm=new THREE.InstancedMesh(new THREE.SphereGeometry(1,8,6),M(0xffffff,{roughness:.8}),parts.length),d=new THREE.Object3D(),col=new THREE.Color();
+    parts.forEach((b,i)=>{d.position.set(b[0],b[1],b[2]);d.rotation.set(rr()*3,rr()*3,0);d.scale.set(b[3],b[3]*(b[5]?.55:.8),b[3]*(b[5]?1.5:1));d.updateMatrix();bm.setMatrixAt(i,d.matrix);col.set(b[4]).convertSRGBToLinear();col.offsetHSL((rr()-.5)*.02,0,(rr()-.5)*.1);bm.setColorAt(i,col)});
     bm.instanceMatrix.needsUpdate=true;bm.instanceColor.needsUpdate=true;add(bm);
   }
 
   // chandeliers + fairy lights
   const chz=[];
   if(dc.chandeliers&&state.chand>0){const a=stageZ+9,b=Dp/2-6;for(let i=0;i<state.chand;i++)chz.push(state.chand===1?(a+b)/2:a+(b-a)*i/(state.chand-1))}
-  const crystal=new THREE.MeshStandardMaterial({color:0xfff6dc,emissive:0xffe2a0,emissiveIntensity:1.4});
+  const crystal=new THREE.MeshStandardMaterial({color:lin(0xfff6dc),emissive:lin(0xffe2a0),emissiveIntensity:1.6,metalness:.2,roughness:.1});
   for(const z of chz){
     const g=new THREE.Group();g.position.set(0,H-1.9,z);
     const rod=new THREE.Mesh(new THREE.CylinderGeometry(.04,.04,1.9,6),gold);rod.position.y=.95;g.add(rod);
@@ -958,8 +972,11 @@ function rebuild(){
   // lights
   G.spot.position.set(0,H-1,stageZ+9);G.spot.target.position.set(0,1.5,stageZ);
   G.pls.forEach((p,i)=>p.position.set(0,H-2.6,stageZ+6+(Dp-stageZ-10-Dp/2+Dp/2)*(i/3)));
+  G.world.traverse(o=>{if(o.isMesh){const plane=o.geometry&&o.geometry.type==='PlaneGeometry';o.castShadow=!plane;o.receiveShadow=true}});
+  G.dir.position.set(0,H*2.4,Dp*.3);G.dir.target.position.set(0,0,0);
+  const sc=G.dir.shadow.camera,ex=Math.max(W,Dp)*.62;sc.left=-ex;sc.right=ex;sc.top=ex;sc.bottom=-ex;sc.near=1;sc.far=H*7;sc.updateProjectionMatrix();
   G.stageZ=stageZ;G.V=V;G.hasChand=chz.length>0;
-  G.fog.density=.011;G.scene.background.setHex(0x120a1a);
+  G.fog.density=.009;
   applyLighting();updateHUD();
   if(G.mode==='2d')layout2d();
   if(!G.firstBuild){G.firstBuild=true}
@@ -968,12 +985,13 @@ function rebuild(){
 function applyLighting(){
   if(!glOK)return;
   const L=state.lighting/100,mood=MOODS[state.mood],T=THEMES[state.theme];
-  const mc=new THREE.Color(mood.c).lerp(new THREE.Color(T.light),state.mood==='warm'?.6:.15);
-  G.amb.intensity=.10+.22*L;G.amb.color.copy(mc).lerp(new THREE.Color(0xffffff),.5);
-  G.hemi.intensity=.18+.34*L;G.hemi.color.copy(mc);
-  G.dir.intensity=.12+.28*L;G.spot.intensity=.5+1.6*L;G.spot.color.copy(mc);
-  G.pls.forEach(p=>{p.color.copy(mc);p.intensity=(G.hasChand?.75:.35)*(.25+.8*L)});
-  G.r.toneMappingExposure=(.5+.5*L)*(G.mode==='2d'?2.2:1);
+  const mc=lin(mood.c).lerp(lin(T.light),state.mood==='warm'?.6:.15);
+  G.amb.intensity=.02+.04*L;G.amb.color.copy(mc);
+  G.hemi.intensity=.02+.04*L;G.hemi.color.copy(mc);
+  G.dir.intensity=.05+.34*L;G.dir.color.copy(mc).lerp(lin(0xffffff),.35);G.spot.intensity=.5+1.6*L;G.up.intensity=.15+.7*L;G.up.color.copy(mc).lerp(lin(0xffffff),.25);G.spot.color.copy(mc);
+  G.pls.forEach(p=>{p.color.copy(mc);p.intensity=(G.hasChand?.36:.18)*(.25+.9*L)});
+  if(G.scene.environment){G.scene.traverse(()=>{})}
+  G.r.toneMappingExposure=(.12+.32*L)*(G.mode==='2d'?1.7:1);
   G.glows.forEach(g=>{g.material.opacity=Math.min(1,g.userData.base*(.3+.7*L));if(g.userData.kind==='chand'||g.userData.kind==='up'){g.material.color.copy(mc)}});
 }
 
