@@ -40,13 +40,16 @@ let s;
 // 1 HERO
 pres.addSection({title:'Opening'});
 s=pres.addSlide({masterName:'DARK',sectionTitle:'Opening'});
-s.addImage({path:'img/r-entrance.jpg',x:0,y:0,w:10,h:5.625,objectName:'hero-3d',altText:'3D preview of a decorated wedding hall'});
-s.addImage({path:'img/ov-left.png',x:0,y:0,w:10,h:5.625,objectName:'hero-fade'});
+for(const [r,tr] of [[4.6,82],[3.4,70],[2.2,55]])s.addShape(pres.ShapeType.ellipse,{x:7.2-r/2,y:2.8-r/2,w:r,h:r,fill:{type:'none'},line:{color:'E9C978',width:1,transparency:tr},objectName:'ring-'+r});
+s.addShape(pres.ShapeType.ellipse,{x:6.6,y:2.2,w:1.2,h:1.2,fill:{color:'E9C978'},line:{color:'E9C978'},shadow:{type:'outer',color:'E9C978',opacity:.45,blur:24,offset:0,angle:90},objectName:'hero-core'});
+T(s,'✦',{x:6.6,y:2.2,w:1.2,h:1.2,fontSize:44,bold:true,color:'1B1033',align:'center',valign:'middle'});
+const orb=[['FaRupeeSign',8.55,1.25,'5B52E0'],['FaPalette',5.55,1.7,'E58AA3'],['FaUsers',8.3,4.3,'3AA68A'],['FaMagic',5.9,4.2,'8B5CF6']];
+for(const o of orb)await circ(s,o[0],o[1],o[2],.7,o[3],'FFFFFF','orb-'+o[0]);
 s.addShape(pres.ShapeType.ellipse,{x:.6,y:.55,w:.5,h:.5,fill:{color:'E9C978'},line:{color:'E9C978'},objectName:'logo-bg'});
 T(s,'✦',{x:.6,y:.55,w:.5,h:.5,fontSize:18,bold:true,color:'1B1033',align:'center',valign:'middle'});
 T(s,'WEDVERSE',{x:1.2,y:.55,w:2.5,h:.5,fontSize:13,bold:true,color:'FFFFFF',charSpacing:6,valign:'middle'});
 T(s,'PLAN · VISUALIZE · CELEBRATE',{x:.6,y:1.7,w:5,h:.3,fontSize:12,bold:true,color:'E9C978',charSpacing:5});
-H(s,'WedVerse AI',true,{x:.6,y:2.0,w:6,h:1.1,fontSize:64});
+H(s,'WedVerse AI',true,{x:.6,y:2.0,w:5.6,h:1.1,fontSize:64});
 T(s,'See your wedding before\nyou spend on it.',{x:.6,y:3.15,w:5.2,h:1.0,fontSize:26,italic:true,color:'FFFFFF',fontFace:'Cambria',valign:'top'});
 pill(s,'SEED ROUND  ·  ₹1.5 Cr for 5%',.6,4.55,3.1,'ask-pill');
 s.addNotes('OPEN (15 sec): "Sharks, a typical Indian family will spend ₹25 lakh on a wedding. Today they sign that cheque before they have seen a single thing. We fix that." Pause, then move on.');
@@ -80,42 +83,42 @@ s.addNotes('Three pains: they cannot see it, they cannot compare it, they cannot
 // 4 SOLUTION
 s=pres.addSlide({masterName:'LIGHT',sectionTitle:'Problem & Solution'});
 H(s,'Preview. Optimise. Book.',false);
-const st=[['FaUpload','Upload your venue','Photos, floor plan or video become a 3D digital twin.','5B52E0'],
- ['FaCube','Design it in 3D','Swap themes, layouts and lighting in seconds. Walk it in VR.','B98A2E'],
- ['FaCalculator','Optimise the budget','Live quote, material list and AI savings ideas as you design.','3AA68A']];
-for(let i=0;i<3;i++){const y=1.4+i*1.2;
-  await circ(s,st[i][0],.6,y,.8,st[i][3],'FFFFFF','step-'+i);
-  T(s,st[i][1],{x:1.6,y:y+.02,w:3.4,h:.4,fontSize:20,bold:true,color:'1B1033',fontFace:'Cambria'});
-  T(s,st[i][2],{x:1.6,y:y+.45,w:3.4,h:.7,fontSize:14,color:'4A3F73',valign:'top'});}
-s.addImage({path:'img/rr-entrance.png',x:5.45,y:1.2,w:3.95,h:3.95,objectName:'solution-shot',altText:'3D venue preview'});
-frame(s,5.45,1.2,3.95,3.95,'solution-frame');
+const st=[['FaUpload','Upload venue','Photos, floor plan or video become a digital twin of your hall.','5B52E0','1'],
+ ['FaCube','Design the day','Swap themes, layouts and lighting in seconds. Walk it in VR.','B98A2E','2'],
+ ['FaCalculator','Optimise budget','Live quote, material list and AI savings ideas as you design.','3AA68A','3']];
+s.addShape(pres.ShapeType.line,{x:1.5,y:1.95,w:7.0,h:0,line:{color:'C9BFEA',width:2,dashType:'dash'},objectName:'flow-line'});
+for(let i=0;i<3;i++){const x=.6+i*3.0;
+  await circ(s,st[i][0],x+1.0,1.55,.8,st[i][3],'FFFFFF','step-'+i);
+  card(s,x,2.65,2.8,1.75,'step-card-'+i);
+  T(s,st[i][4]+'  '+st[i][1],{x:x+.2,y:2.8,w:2.4,h:.4,fontSize:19,bold:true,color:'1B1033',fontFace:'Cambria'});
+  T(s,st[i][2],{x:x+.2,y:3.28,w:2.4,h:1.0,fontSize:14,color:'4A3F73',valign:'top'});}
+s.addShape(pres.ShapeType.roundRect,{x:.6,y:4.6,w:8.8,h:.55,rectRadius:.14,fill:{color:'1B1033'},line:{color:'1B1033'},objectName:'tagline'});
+T(s,'Couples preview, customise and optimise their wedding before booking a single vendor.',{x:.8,y:4.6,w:8.4,h:.55,fontSize:14,color:'FFFFFF',valign:'middle',italic:true});
 s.addNotes('Walk the three steps in one breath. Then go to the live demo.');
 
 // 5 PRODUCT
 pres.addSection({title:'Product'});
 s=pres.addSlide({masterName:'DARK',sectionTitle:'Product'});
-H(s,'Live product — not a mock-up',true);
-s.addImage({path:'img/rr-app-stage.png',x:.6,y:1.3,w:5.1,h:5.1*1000/1577,objectName:'app-stage',altText:'3D venue preview in the WedVerse studio'});
-frame(s,.6,1.3,5.1,5.1*1000/1577,'app-stage-frame');
-s.addImage({path:'img/rr-app-budget.png',x:6.1,y:1.3,w:3.2,h:3.2*720/669,objectName:'app-budget',altText:'Budget optimizer panel'});
-frame(s,6.1,1.3,3.2,3.2*720/669,'app-budget-frame');
-const cap=[['Live 3D preview','drag, zoom, walk the aisle'],['Live budget','updates with every change']];
-T(s,cap[0][0]+' — '+cap[0][1],{x:.6,y:4.9,w:5.1,h:.3,fontSize:14,bold:true,color:'E9C978'});
-T(s,cap[1][0]+' — '+cap[1][1],{x:5.95,y:4.9,w:3.45,h:.3,fontSize:13,bold:true,color:'E9C978'});
-s.addNotes('DEMO (45 sec): open index.html. Switch theme live, drag guests to 700 to trigger the capacity warning, open Quote. Say: "Every number you see updates from what is in the 3D scene."');
+H(s,'What the product does',true);
+const ft=[['FaUpload','Digital twin','Upload photos, plans or video of any hall.'],['FaPalette','Themes & layouts','Four looks, three seating layouts, instantly.'],['FaUsers','Capacity check','Warns when guests will not fit the hall.'],['FaGlasses','VR walkthrough','Walk the aisle before a rupee is spent.'],['FaFileInvoiceDollar','Live quote','Quantities and costs from your design.'],['FaShareAlt','Planner tools','Client pipeline, markup, share links.']];
+for(let i=0;i<6;i++){const x=.6+(i%3)*3.0,y=1.4+Math.floor(i/3)*1.8;glass(s,x,y,2.8,1.6,'feat-'+i);
+  await circ(s,ft[i][0],x+.2,y+.2,.55,['5B52E0','E58AA3','3AA68A','8B5CF6','B98A2E','5B52E0'][i],'FFFFFF','feat-'+i);
+  T(s,ft[i][1],{x:x+.9,y:y+.2,w:1.8,h:.55,fontSize:16,bold:true,color:'FFFFFF',fontFace:'Cambria',valign:'middle'});
+  T(s,ft[i][2],{x:x+.2,y:y+.9,w:2.4,h:.6,fontSize:14,color:'FFFFFF',valign:'top'});}
+s.addNotes('DEMO (45 sec): open index.html. Switch theme live, drag guests to 700 to trigger the capacity warning, open Quote. Say: "Every number you see updates from what is in the scene."');
 
 // 6 LOOKS
 s=pres.addSlide({masterName:'DARK',sectionTitle:'Product'});
 H(s,'Same venue. Four looks. Zero rework',true);
-const lk=[['pastel','Royal Pastel'],['emerald','Emerald Heritage'],['crimson','Crimson Maharaja'],['midnight','Midnight Gala']];
-for(let i=0;i<4;i++){const x=.6+(i%2)*3.15,y=1.4+Math.floor(i/2)*2.0;
-  s.addImage({path:`img/rr-${lk[i][0]}.png`,x,y,w:3.0,h:3.0*560/900*1,objectName:'look-'+i,altText:lk[i][1]+' theme'});
-  s.addShape(pres.ShapeType.roundRect,{x:x+.12,y:y+1.45,w:1.95,h:.32,rectRadius:.16,fill:{color:'1B1033',transparency:15},line:{color:'E9C978',width:.75},objectName:'chip-bg-'+i});
-  T(s,lk[i][1],{x:x+.12,y:y+1.45,w:1.95,h:.32,fontSize:12,bold:true,color:'FFFFFF',align:'center',valign:'middle'});}
+const lk=[['Royal Pastel','Soft, romantic, ivory & blush',['F4BCCB','FFF3EA','E9C978','F4A6B8']],['Emerald Heritage','Classic, regal, green & gold',['1F7A58','F4EFDC','F5D76E','8FD1AC']],['Crimson Maharaja','Bold, festive, red & gold',['A8182F','F2C14E','FF8C42','D7263D']],['Midnight Gala','Modern, elegant, navy & silver',['2B3A8A','E3E9FF','B7C7FF','E8C872']]];
+for(let i=0;i<4;i++){const x=.6+(i%2)*3.15,y=1.4+Math.floor(i/2)*1.85;glass(s,x,y,3.0,1.7,'look-'+i);
+  for(let k=0;k<4;k++)s.addShape(pres.ShapeType.ellipse,{x:x+.25+k*.62,y:y+.25,w:.5,h:.5,fill:{color:lk[i][2][k]},line:{color:'FFFFFF',width:1.5,transparency:40},objectName:`swatch-${i}-${k}`});
+  T(s,lk[i][0],{x:x+.25,y:y+.9,w:2.6,h:.4,fontSize:18,bold:true,color:'FFFFFF',fontFace:'Cambria'});
+  T(s,lk[i][1],{x:x+.25,y:y+1.3,w:2.6,h:.3,fontSize:13,color:'FFFFFF'});}
 const lt=[['4','themes'],['3','layouts'],['<1s','to switch']];
 for(let i=0;i<3;i++){T(s,lt[i][0],{x:7.2,y:1.4+i*1.15,w:2.2,h:.65,fontSize:38,bold:true,color:'E9C978',fontFace:'Cambria'});
   T(s,lt[i][1],{x:7.2,y:2.02+i*1.15,w:2.2,h:.3,fontSize:14,color:'FFFFFF'});}
-s.addNotes('Click through the four themes live. This is the "wow": the couple argues about colours in minutes, not weeks.');
+s.addNotes('Couples argue about colours for weeks. With WedVerse they compare four complete looks in minutes.');
 
 // 7 MARKET
 pres.addSection({title:'Market & Model'});
@@ -192,12 +195,11 @@ s.addNotes('Say the ask clearly, once: "₹1.5 crore for 5 percent." Then stop t
 
 // 13 CLOSE
 s=pres.addSlide({masterName:'DARK',sectionTitle:'The Ask'});
-s.addImage({path:'img/r-mandap.jpg',x:0,y:0,w:10,h:5.625,objectName:'close-3d',altText:'3D mandap'});
-s.addImage({path:'img/ov-tint.png',x:0,y:0,w:10,h:5.625,objectName:'close-tint'});
+for(const [r,tr] of [[6.2,85],[4.6,78],[3.2,68]])s.addShape(pres.ShapeType.ellipse,{x:5-r/2,y:2.75-r/2,w:r,h:r,fill:{type:'none'},line:{color:'E9C978',width:1,transparency:tr},objectName:'close-ring-'+r});
 H(s,"Let's make every wedding\na masterpiece",true,{x:.8,y:1.5,w:8.4,h:1.6,fontSize:46,align:'center',valign:'middle'});
 T(s,'WedVerse AI — See your wedding before you spend on it.',{x:.8,y:3.25,w:8.4,h:.5,fontSize:20,italic:true,align:'center',color:'E9C978',fontFace:'Cambria'});
 pill(s,"WHO'S IN?",4.0,4.2,2.0,'close-pill');
-s.addNotes('Close with eye contact. Then Q&A. Prep: CAC, pricing proof, why now (3D in browser + AI), defensibility, founder-market fit.');
+s.addNotes('Close with eye contact. Then Q&A. Prep: CAC, pricing proof, why now (browser-based visualisation + AI), defensibility, founder-market fit.');
 
 await pres.writeFile({fileName:'WedVerse_AI_Shark_Tank_Pitch.pptx'});
 await applyTheme('WedVerse_AI_Shark_Tank_Pitch.pptx',THEME);
