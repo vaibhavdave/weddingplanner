@@ -100,7 +100,7 @@ frame(s,.6,1.3,5.1,5.1*1000/1577,'app-stage-frame');
 s.addImage({path:'img/rr-app-budget.png',x:6.1,y:1.3,w:3.2,h:3.2*720/669,objectName:'app-budget',altText:'Budget optimizer panel'});
 frame(s,6.1,1.3,3.2,3.2*720/669,'app-budget-frame');
 const cap=[['Live 3D preview','drag, zoom, walk the aisle'],['Live budget','updates with every change']];
-T(s,'← '+cap[0][0]+' · '+cap[0][1],{x:.6,y:4.7,w:5.1,h:.35,fontSize:14,bold:true,color:'E9C978'});
+T(s,cap[0][0]+' — '+cap[0][1],{x:.6,y:4.9,w:5.1,h:.3,fontSize:14,bold:true,color:'E9C978'});
 T(s,cap[1][0]+' — '+cap[1][1],{x:5.95,y:4.9,w:3.45,h:.3,fontSize:13,bold:true,color:'E9C978'});
 s.addNotes('DEMO (45 sec): open index.html. Switch theme live, drag guests to 700 to trigger the capacity warning, open Quote. Say: "Every number you see updates from what is in the 3D scene."');
 
@@ -172,7 +172,7 @@ s.addNotes('Planners are the distribution: each planner runs 10–40 weddings a 
 s=pres.addSlide({masterName:'LIGHT',sectionTitle:'Edge & Growth'});
 H(s,'Projected revenue: ₹0.6 Cr to ₹14.5 Cr in 3 years',false,{fontSize:28});
 card(s,.6,1.3,5.5,3.65,'chart-card');
-s.addChart(pres.charts.BAR,[{name:'Revenue (₹ Cr)',labels:['Year 1','Year 2','Year 3'],values:[0.6,4.2,14.5]}],{x:.75,y:1.4,w:5.2,h:3.45,barDir:'col',chartColors:['5B52E0'],showTitle:true,title:'Revenue (₹ Cr) — illustrative',titleFontSize:13,titleColor:'1B1033',showValue:true,dataLabelFormatCode:'0.0',dataLabelPosition:'outEnd',dataLabelColor:'1B1033',dataLabelFontSize:13,dataLabelFontFace:'+mn-lt',catAxisLabelColor:'3A2278',catAxisLabelFontSize:12,catAxisLabelFontFace:'+mn-lt',valAxisHidden:true,valGridLine:{style:'none'},showLegend:false,barGapWidthPct:60});
+s.addChart(pres.charts.BAR,[{name:'Revenue (₹ Cr)',labels:['Year 1','Year 2','Year 3'],values:[0.6,4.2,14.5]}],{x:.75,y:1.4,w:5.2,h:3.45,barDir:'col',chartColors:['5B52E0'],showTitle:true,title:'Revenue (₹ Cr) — illustrative',titleFontFace:'+mn-lt',titleFontSize:13,titleColor:'1B1033',showValue:true,dataLabelFormatCode:'0.0',dataLabelPosition:'outEnd',dataLabelColor:'1B1033',dataLabelFontSize:13,dataLabelFontFace:'+mn-lt',catAxisLabelColor:'3A2278',catAxisLabelFontSize:12,catAxisLabelFontFace:'+mn-lt',valAxisHidden:true,valGridLine:{style:'none'},showLegend:false,barGapWidthPct:60});
 const kp=[['75%','target gross margin'],['<4 mo','CAC payback target'],['3×','LTV : CAC target']];
 for(let i=0;i<3;i++){const y=1.3+i*1.25;card(s,6.35,y,3.05,1.1,'kpi-'+i);
   T(s,kp[i][0],{x:6.55,y:y+.1,w:1.4,h:.9,fontSize:28,bold:true,color:'5B52E0',fontFace:'Cambria',valign:'middle'});
@@ -187,14 +187,14 @@ T(s,'₹1.5 Cr',{x:.6,y:1.25,w:4.6,h:1.3,fontSize:76,bold:true,color:'E9C978',fo
 T(s,'for 5% equity',{x:.6,y:2.6,w:4.4,h:.5,fontSize:26,color:'FFFFFF',fontFace:'Cambria'});
 glass(s,.6,3.35,4.4,.55,'val-card');T(s,'₹30 Cr post-money  ·  18-month runway',{x:.6,y:3.35,w:4.4,h:.55,fontSize:14,bold:true,color:'E9C978',align:'center',valign:'middle'});
 T(s,'Beyond cash: wedding-industry distribution, vendor introductions and brand credibility.',{x:.6,y:4.15,w:4.4,h:.8,fontSize:15,italic:true,color:'FFFFFF',valign:'top'});
-s.addChart(pres.charts.DOUGHNUT,[{name:'Use of funds',labels:['Product & AI','Sales & partnerships','Vendor network','Ops & legal'],values:[40,30,15,15]}],{x:5.3,y:1.15,w:4.2,h:3.9,holeSize:58,chartColors:['E9C978','8B5CF6','E58AA3','3AA68A'],showPercent:true,showValue:false,dataLabelColor:'1B1033',dataLabelFontSize:12,dataLabelFontFace:'+mn-lt',showLegend:true,legendPos:'b',legendColor:'FFFFFF',legendFontSize:12,legendFontFace:'+mn-lt',showTitle:true,title:'Use of funds',titleColor:'FFFFFF',titleFontSize:14,dataBorder:{pt:2,color:'1B1033'}});
+s.addChart(pres.charts.DOUGHNUT,[{name:'Use of funds',labels:['Product & AI','Sales & partnerships','Vendor network','Ops & legal'],values:[40,30,15,15]}],{x:5.3,y:1.15,w:4.2,h:3.9,holeSize:58,chartColors:['E9C978','8B5CF6','E58AA3','3AA68A'],showPercent:true,showValue:false,dataLabelColor:'1B1033',dataLabelFontSize:12,dataLabelFontFace:'+mn-lt',showLegend:true,legendPos:'b',legendColor:'FFFFFF',legendFontSize:12,legendFontFace:'+mn-lt',showTitle:true,title:'Use of funds',titleFontFace:'+mn-lt',titleColor:'FFFFFF',titleFontSize:14,dataBorder:{pt:2,color:'1B1033'}});
 s.addNotes('Say the ask clearly, once: "₹1.5 crore for 5 percent." Then stop talking. Valuation and split are placeholders — adjust to your numbers.');
 
 // 13 CLOSE
 s=pres.addSlide({masterName:'DARK',sectionTitle:'The Ask'});
 s.addImage({path:'img/r-mandap.jpg',x:0,y:0,w:10,h:5.625,objectName:'close-3d',altText:'3D mandap'});
 s.addImage({path:'img/ov-tint.png',x:0,y:0,w:10,h:5.625,objectName:'close-tint'});
-H(s,"Let's make every wedding a masterpiece",true,{x:.8,y:1.5,w:8.4,h:1.6,fontSize:46,align:'center',valign:'middle'});
+H(s,"Let's make every wedding\na masterpiece",true,{x:.8,y:1.5,w:8.4,h:1.6,fontSize:46,align:'center',valign:'middle'});
 T(s,'WedVerse AI — See your wedding before you spend on it.',{x:.8,y:3.25,w:8.4,h:.5,fontSize:20,italic:true,align:'center',color:'E9C978',fontFace:'Cambria'});
 pill(s,"WHO'S IN?",4.0,4.2,2.0,'close-pill');
 s.addNotes('Close with eye contact. Then Q&A. Prep: CAC, pricing proof, why now (3D in browser + AI), defensibility, founder-market fit.');
